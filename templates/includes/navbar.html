@@ -30,8 +30,12 @@
                                     </ul>
                                 </div>
                                 <div class="header__top__right__auth">
-                                    <a href="#"><i class="fa fa-user"></i> Login</a>
                                 </div>
+                                <div class="widget-header">
+                                    <small class="title text-muted">welcom guest!</small>
+                                </div>
+                                <a href="{% url 'login' %}"><i class="fa fa-user"></i> Login</a><span class="dark-transp">|</span>
+                                <a href="{% url 'register' %}"><i class="fa fa-user user-icon"></i> Register</a>
                             </div>
                         </div>
                     </div>
