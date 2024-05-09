@@ -20,22 +20,24 @@
                                     <a href="#"><i class="fa fa-linkedin"></i></a>
                                     <a href="#"><i class="fa fa-pinterest-p"></i></a>
                                 </div>
-                                <div class="header__top__right__language">
-                                    <img src="{% static '/img/language.png' %}" alt="">
-                                    <div>English</div>
-                                    <span class="arrow_carrot-down"></span>
-                                    <ul>
-                                        <li><a href="#">Spanis</a></li>
-                                        <li><a href="#">English</a></li>
-                                    </ul>
-                                </div>
+                                
+                                {% if user.id is None %}
                                 <div class="header__top__right__auth">
+                                    <div class="widget-header">
+                                        <small class="title text-muted">Welcom guest!</small>
+                                    </div>
                                 </div>
-                                <div class="widget-header">
-                                    <small class="title text-muted">welcom guest!</small>
-                                </div>
-                                <a href="{% url 'login' %}"><i class="fa fa-user"></i> Login</a><span class="dark-transp">|</span>
+                                <a href="{% url 'login' %}"><i class="fa fa-user"></i> Login </a><span class="dark-transp">|</span>
                                 <a href="{% url 'register' %}"><i class="fa fa-user user-icon"></i> Register</a>
+                                {% else %}
+                                <div class="header__top__right__auth">
+                                    <div class="widget-header">
+                                        <small class="title text-muted">Welcome {{user.username|title}}!</small>
+                                    </div>
+                                </div>
+                                <a href="#"><i class="fa fa-user"></i> Dashboard </a><span class="dark-transp">|</span>
+                                <a href="{% url 'logout' %}"><i class="fa fa-user user-icon"></i> Logout </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

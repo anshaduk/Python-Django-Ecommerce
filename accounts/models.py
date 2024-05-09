@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager 
 
 # Create your models here.
 class MyAccountManager(BaseUserManager):
@@ -16,6 +16,7 @@ class MyAccountManager(BaseUserManager):
         )
 
         user.set_password(password)
+        # user.is_active = True
         user.save(using=self._db)
         return user
     
@@ -35,6 +36,9 @@ class MyAccountManager(BaseUserManager):
         user.is_superadmin = True
         user.save(using=self._db)
         return user
+    
+
+    
 class Account(AbstractBaseUser):
     first_name      =models.CharField(max_length=50)
     last_name       =models.CharField(max_length=50)
@@ -55,7 +59,7 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS= ['username','first_name','last_name']
 
     #MyAccountManger is act the object of user and super_user all operations
-    objects=MyAccountManager()
+    objects = MyAccountManager()
 
     def __str__(self):
         return self.email
