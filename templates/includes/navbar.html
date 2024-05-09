@@ -35,7 +35,7 @@
                                         <small class="title text-muted">Welcome {{user.username|title}}!</small>
                                     </div>
                                 </div>
-                                <a href="#"><i class="fa fa-user"></i> Dashboard </a><span class="dark-transp">|</span>
+                                <a href="{% url 'dashboard' %}"><i class="fa fa-user"></i> Dashboard </a><span class="dark-transp">|</span>
                                 <a href="{% url 'logout' %}"><i class="fa fa-user user-icon"></i> Logout </a>
                                 {% endif %}
                             </div>
