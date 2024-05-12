@@ -1,6 +1,6 @@
-from django.shortcuts import render,redirect
-from . forms import RegistrationForm
-from . models import Account
+from django.shortcuts import render,redirect,get_object_or_404
+from . forms import RegistrationForm,UserForm,UserProfileForm
+from . models import Account,UserProfile
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate  , login , logout
@@ -30,6 +30,11 @@ def register(request):
             user = Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=username,password=password)
             user.phone_number = phone_number
             user.save()
+
+            #user profile creation
+            profile  = UserProfile()
+            profile.user = user
+            profile.save()
 
 
             #user activation
@@ -76,17 +81,31 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                login(request, user)    
-                messages.success(request,'You are now logged in.')
-                return redirect('dashboard')
-            else:
-                messages.error(request,"Invalid login credentials")    
+        try:
+            form = LoginForm(request.POST)
+            if form.is_valid():
+                email = form.cleaned_data['email']
+                password = form.cleaned_data['password']
+                users = Account.objects.get(email=email)
+                user = authenticate(request, email=email, password=password)
+
+                if user is not None:
+                        
+                    login(request, user)    
+                    messages.success(request,'You are now logged in.')
+                    return redirect('index')
+                
+                #Error Password entered check
+                if not users.check_password(password):
+                    messages.error(request,"Invalid Password...!")
+                    return redirect('login')
+            
+            # if not user.check_email(email):
+            #     messages.error(request,"Invalid Password...!")
+            #     return redirect('login')
+        
+        except Account.DoesNotExist: 
+                messages.error(request,"No user found with this email...!")    
                 return redirect('login')
             
     else:
@@ -183,3 +202,33 @@ def resetPassword(request):
             return redirect('resetPassword')
     else:
         return render(request,'accounts/resetPassword.html')
+
+
+@login_required(login_url='login')
+def editprofile(request):
+ 
+    userprofile = get_object_or_404(UserProfile,user=request.user)
+   
+    if request.method == "POST":
+        user_form = UserForm(request.POST,instance=request.user)
+        profile_form = UserProfileForm(request.POST,request.FILES,instance=userprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            if user_form is None:
+                user_form = profile_form.save(commit=False)
+                user_form.user = request.user
+            profile_form.save()
+            messages.success(request,'Your profile has been updated')
+            return redirect('editprofile')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = UserProfileForm(instance=userprofile)   
+        
+    
+
+    context = {
+        'user_form' : user_form,
+        'profile_form' : profile_form,
+        'userprofile' : userprofile,
+    }
+    return render(request,'accounts/editprofile.html',context)

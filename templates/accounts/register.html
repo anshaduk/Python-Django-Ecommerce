@@ -20,7 +20,9 @@
                         </div> <!-- form-group end.// -->
                         <div class="col form-group">
                             <label>Last name</label>
+
                               {{form.last_name}}
+
                         </div> <!-- form-group end.// -->
                     </div> <!-- form-row end.// -->
                     <div class="form-row">
@@ -51,7 +53,7 @@
                     {{ form.email.errors }}
                     <!-- This is non-field errors -->
                     {{ form.non_field_errors }}
-
+                   {{form.password.errors}}
                 </form>
             </article><!-- card-body.// -->
         </div> <!-- card .// -->
