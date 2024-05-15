@@ -1,4 +1,4 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,HttpResponse
 from . models import Product
 from category.models import Category
 
@@ -35,3 +35,7 @@ def product_detail(request,category_slug,product_slug):
         'single_product':single_product,
     }
     return render(request,'store/product_detail.html',context)
+
+
+def search(request):
+    return HttpResponse('search page')

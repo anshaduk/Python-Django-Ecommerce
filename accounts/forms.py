@@ -88,12 +88,15 @@ class RegistrationForm(forms.ModelForm):
         return password
     
     #Phone_number validation
-    # def clean_phone(self):
-    #     phone_number = self.cleaned_data.get("phone_number")
-    #     z = phonenumbers.parse(phone_number,"SG")
-    #     if not phonenumbers.is_valid_number(z):
-    #         raise forms.ValidationError("Number not in SG format")
-    #     return phone_number
+    def clean_phone(self):
+        phone_number = self.cleaned_data.get("phone_number")
+        region = 'IN'
+        if phone_number and not phone_number.region_code == region:
+            raise ValidationError("Please enter a valid indian phone number.")
+        elif re.fullmatch('[6-9][0-9]{9}',phone_number) and not None:
+            return phone_number
+        else:
+           raise ValidationError("Please enter a valid indian phone number.") 
     
     def clean(self):
         cleaned_data = super(RegistrationForm,self).clean()
