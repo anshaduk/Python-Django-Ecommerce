@@ -14,6 +14,7 @@ from . models import Account
 from .models import UserProfile
 
 
+
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         'placeholder':'Enter Password',
@@ -85,7 +86,15 @@ class RegistrationForm(forms.ModelForm):
         
 
         return password
-
+    
+    #Phone_number validation
+    # def clean_phone(self):
+    #     phone_number = self.cleaned_data.get("phone_number")
+    #     z = phonenumbers.parse(phone_number,"SG")
+    #     if not phonenumbers.is_valid_number(z):
+    #         raise forms.ValidationError("Number not in SG format")
+    #     return phone_number
+    
     def clean(self):
         cleaned_data = super(RegistrationForm,self).clean()
         password = cleaned_data.get('password')
