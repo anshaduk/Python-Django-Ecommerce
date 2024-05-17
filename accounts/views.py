@@ -31,7 +31,7 @@ def register(request):
             user.phone_number = phone_number
             user.save()
 
-            #user profile creation
+            #user profile creation                     
             profile  = UserProfile.objects.create(user=user)
             profile.save()
 

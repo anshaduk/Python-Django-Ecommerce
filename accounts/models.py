@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager 
 from phonenumber_field.modelfields import PhoneNumberField
+from django.core.validators import MaxLengthValidator
+
+
 
 # Create your models here.
 class MyAccountManager(BaseUserManager):
@@ -46,6 +49,7 @@ class Account(AbstractBaseUser):
     email           =models.EmailField(max_length=100,unique=True)
     # phone_number    =models.CharField(max_length=50)
     phone_number    =PhoneNumberField(region='IN')
+    # phone_number = models.CharField(max_length=10, blank=False)
 
     #Required fields
     date_joined     =models.DateTimeField(auto_now_add=True)
