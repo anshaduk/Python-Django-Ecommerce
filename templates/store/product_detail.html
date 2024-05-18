@@ -12,6 +12,8 @@
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 
      <!-- Css Styles -->
      <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}" type="text/css">
@@ -286,7 +288,12 @@
                         {% if single_product.stock <= 0 %}
                             <span class='text-danger'>Out of Stock</span>
                         {% else %}
-                        <a href="#" class="primary-btn">ADD TO CARD</a>
+                            {% if in_cart %}
+                            <a href="#" class="btn btn-success"><span class="text">ADDED TO CART</span><i class="fas fa-check"></i></a>
+                            <a href="{% url 'cart' %}" class="btn btn-outline-primary"><span class="text">VIEW CART</span><i class="fas fa-eye"></i></a>
+                            {% else %}
+                            <a href="{% url 'add_cart' single_product.id %}" class="primary-btn">ADD TO CART</a>
+                            {% endif %}
                         {% endif %}
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
@@ -534,6 +541,7 @@
     <!-- Footer Section End -->
 
     <!-- Js Plugins -->
+    
     <script src="{% static '/js/jquery-3.3.1.min.js' %}"></script>
     <script src="{% static '/js/bootstrap.min.js' %}"></script>
     <script src="{% static '/js/jquery.nice-select.min.js' %}"></script>
