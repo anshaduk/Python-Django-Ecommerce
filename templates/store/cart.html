@@ -43,7 +43,7 @@
                             <td>
                                 <div class="input-group input-spinner" style="display: flex; align-items: center; justify-content: center;">
                                     <div class="input-group-prepend">
-                                        <a href="{% url 'remove_cart' cart_item.product.id %}" class="btn btn-light" type="button" id="button-minus" style="display: flex; align-items: center; justify-content: center; height: 100%; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                        <a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="btn btn-light" type="button" id="button-minus" style="display: flex; align-items: center; justify-content: center; height: 100%; border-top-right-radius: 0; border-bottom-right-radius: 0;">
                                             <i class="fa fa-minus"></i>
                                         </a>
                                     </div>
@@ -62,7 +62,7 @@
                                 </div>
                             </td>
                             <td class="text-right">
-                                <a href="{% url 'remove_cart_item' cart_item.product.id %}" class="btn btn-danger"> Remove</a>
+                                <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}" class="btn btn-danger"> Remove</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -89,7 +89,7 @@
                     <p class="text-center mb-3">
                         <img src="{% static '/img/icons/payments.png' %}" height="26">
                     </p>
-                    <a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
+                    <a href="{% url 'checkout' %}" class="btn btn-primary btn-block"> Checkout </a>
                     <a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
                 </div> <!-- card-body.// -->
             </div> <!-- card.// -->

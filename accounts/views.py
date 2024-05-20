@@ -15,8 +15,13 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 
+from carts.views import _cart_id
+from carts.models import Cart,CartItem
+
 
 # Create your views here.
+
+
 def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
@@ -61,23 +66,6 @@ def register(request):
     return render(request,'accounts/register.html',context)
 
 
-# def login(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         print(email)
-#         password = request.POST.get('password')
-#         print(password)
-#         user = auth.authenticate(request,email=email,password=password)
-#         print(user,'iiiiiiiiiiiiiiiiiii')
-
-#         if user is not None:
-#             auth.login(request,user)
-#             return redirect('index')
-#             # print('hello')    
-#         else:
-#             messages.error(request,"Invalid login credentials")
-#             return redirect('login')
-#     return render(request,'accounts/login.html')
 
 def user_login(request):
     if request.method == 'POST':
@@ -87,18 +75,29 @@ def user_login(request):
                 email = form.cleaned_data['email']
                 password = form.cleaned_data['password']
                 users = Account.objects.get(email=email)
+                # Authenticate user 
                 user = authenticate(request, email=email, password=password)
 
-                if user is not None:
-                        
-                    login(request, user)    
-                    messages.success(request,'You are now logged in.')
-                    return redirect('index')
+                if user is not None:  
+                     try:
+                         cart = Cart.objects.get(cart_id=_cart_id(request)) 
+                         is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+                         if is_cart_item_exists:
+                             cart_item = CartItem.objects.filter(cart=cart)
+
+                             for item in cart_item:
+                                 item.user = user
+                                 item.save()
+                     except Cart.DoesNotExist:
+                         pass  
+                login(request, user)    
+                messages.success(request,'You are now logged in.')
+                return redirect('index')
                 
-                #Error Password entered check
-                if not users.check_password(password):
-                    messages.error(request,"Invalid Password...!")
-                    return redirect('login')
+            #Error Password entered check
+            if not users.check_password(password):
+                messages.error(request,"Inv alid Password...!")
+                return redirect('login')
             
             # if not user.check_email(email):
             #     messages.error(request,"Invalid Password...!")
@@ -111,6 +110,8 @@ def user_login(request):
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
+
+
 
 
 
