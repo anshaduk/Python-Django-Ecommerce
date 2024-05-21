@@ -8,6 +8,8 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from store.models import Product 
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 # Create your views here.
 @csrf_exempt
@@ -54,7 +56,19 @@ def payments(request):
 
     #Clear cart
     CartItem.objects.filter(user=request.user).delete()
-    
+
+    #send order recieved email to customer
+    mail_subject = 'Thank you for your order!'
+    message = render_to_string('orders/order_recieved_email.html',
+        {
+            'user' : request.user,
+            'order': order,
+        },
+        )
+    to_email = request.user.email
+    sent_email = EmailMessage(mail_subject,message,to=[to_email])
+    sent_email.send()
+
  
     return render(request,'orders/payments.html')
 
