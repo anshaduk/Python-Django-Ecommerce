@@ -176,14 +176,16 @@
                             status : details.status,
                         }),
                     })
-                    // .then(response => response.json())
-                    // .then(data=>{
-                    //     window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
+                    .then(response => response.json())
+                    .then(data=>{
+                        // console.log('Success:',data);
+                        // console.log('Transaction Completed.');
+                        window.location.href = redirect_url + '?order_number='+data.order_number+'&payment_id='+data.transID;
 
-                    // })
-                    // .catch(error => {
-                    //     console.error('Error:', error);
-                    // });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
                 }
 
                 
