@@ -18,6 +18,8 @@ from django.core.mail import EmailMessage
 from carts.views import _cart_id
 from carts.models import Cart,CartItem
 
+from orders.models import Order
+
 
 # Create your views here.
 
@@ -143,7 +145,14 @@ def activate(request,uidb64,token):
 
 @login_required(login_url = 'login')
 def dashboard(request):
-    return render(request,'accounts/dashboard.html')
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id,is_ordered=True)
+    orders_count = orders.count()
+    userprofile = get_object_or_404(UserProfile,user=request.user)
+    context = {
+        'orders_count' : orders_count,
+        'userprofile'   : userprofile,
+    }
+    return render(request,'accounts/dashboard.html',context)
 
 def forgotPassword(request):
     if request.method == 'POST':
@@ -236,3 +245,33 @@ def editprofile(request):
         'userprofile' : userprofile,
     }
     return render(request,'accounts/editprofile.html',context)
+
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user,is_ordered=True).order_by('-created_at')
+    context = {
+      'orders' : orders,  
+    }
+    return render(request,'accounts/my_orders.html',context)
+
+
+@login_required(login_url='login')
+def change_password(request):
+    if request.method == 'POST':
+        current_password = request.POST['current_password']
+        new_password = request.POST['new_password']
+        confirm_password = request.POST['confirm_password']
+
+        user = Account.objects.get(username__exact=request.user.username)
+        if new_password == confirm_password:
+            success = user.check_password(current_password)
+            if success:
+                user.set_password(new_password)
+                messages.success(request,'Password updated successfully...')
+                return redirect('change_password')
+            else:
+                messages.error(request,'Please enter valid current password')
+                return redirect('change_password')
+        else:
+            messages.error(request,'Password does not match!')
+            return redirect('change_password')
+    return render(request,'accounts/change_password.html')
