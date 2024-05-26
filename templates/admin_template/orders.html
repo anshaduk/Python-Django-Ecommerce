@@ -1,0 +1,49 @@
+{% extends 'admin_template/base.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-5">
+    <div class="row tm-content-row">
+      <div class="col-12 tm-block-col">
+        <div class="tm-bg-primary-dark tm-block tm-block-products">
+          <div class="tm-product-table-container">
+            <table class="table table-hover tm-table-small tm-product-table">
+              <thead>
+                <tr>
+                  <th scope="col">&nbsp;</th>
+                  <th scope="col">CUSTOMER NAME</th>
+                  <th scope="col">ORDER NUMBER</th>
+                  <th scope="col">ORDER AMOUNT</th>
+                  <th scope="col">ORDER STATUS</th>
+                  <th scope="col">ORDER DATE</th>
+                  <th scope="col">&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                <tr>
+                  <th scope="row"><input type="checkbox" /></th>
+                  <td>{{order.user.first_name}}</td>
+                  <td>{{order.order_number}}</td>
+                  <td>{{order.order_total}}</td>
+                  <td>{{order.status}}</td>
+                  <td>{{order.created_at}}</td>
+    
+                  <td>
+                    <a href="{% url 'orderdetails' order.id %}" class="tm-product-edit-link">
+                        <i class="far fa-eye tm-product-edit-icon" style="color: white; font-size: 20px;"></i>
+                    </a>
+                </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!-- table container -->
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

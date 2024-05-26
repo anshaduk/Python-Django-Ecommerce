@@ -37,6 +37,9 @@
                                 </div>
                                 <a href="{% url 'dashboard' %}"><i class="fa fa-user"></i> Dashboard </a><span class="dark-transp">|</span>
                                 <a href="{% url 'logout' %}"><i class="fa fa-user user-icon"></i> Logout </a>
+                                {% if user.is_admin %}
+                                <a href="{% url 'admin_panel' %}"><span class="dark-transp">|</span><i class="fa fa-user user-icon"></i> Admin </a>
+                                {% endif %}
                                 {% endif %}
                             </div>
                         </div>

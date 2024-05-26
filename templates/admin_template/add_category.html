@@ -1,0 +1,82 @@
+{% extends 'admin_template/base.html' %}
+
+{% block content %}
+
+<div class="container tm-mt-big tm-mb-big">
+    <div class="row">
+        <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+            <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                {% include 'includes/alerts.html' %}
+                {% if 'edit_category' in request.path %}
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block">Edit Category</h2>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tm-block-title d-inline-block">Add Category</h2>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row tm-edit-product-row">
+                    <div class="col-xl-6 col-lg-6 col-md-12">
+                        <form method="POST" class="tm-edit-product-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group mb-3">
+                                <label>Category Name</label>
+                                {{ form.category_name }}
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Slug</label>
+                                {{ form.slug }}
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Description</label>
+                                {{ form.description }}
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>Image</label>
+                                {{ form.cat_image }}
+                            </div>
+                    </div>
+                    {% if 'edit_category' in request.path %}
+                    <div class="col-12">
+                        <input type="submit" value="Edit Category Now" class="btn btn-primary btn-block text-uppercase">
+                    </div>
+                    {% else %}
+                    <div class="col-12">
+                        <input type="submit" value="Add Category Now" class="btn btn-primary btn-block text-uppercase">
+                    </div>
+                    {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</div>
+
+<script>
+    function generateSlug(str) {
+        return str.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryNameField = document.querySelector('#id_category_name');
+        const slugField = document.querySelector('#id_slug');
+
+        categoryNameField.addEventListener('input', function() {
+            slugField.value = generateSlug(categoryNameField.value);
+        });
+    });
+</script>
+{% endblock %}
