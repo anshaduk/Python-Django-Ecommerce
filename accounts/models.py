@@ -60,7 +60,7 @@ class Account(AbstractBaseUser):
     
     is_active       =models.BooleanField(default=False)
     is_superadmin   =models.BooleanField(default=False)
-
+    is_blocked = models.BooleanField(default=False)
     #To change username into email for using login
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS= ['username','first_name','last_name']
@@ -76,6 +76,9 @@ class Account(AbstractBaseUser):
     
     def has_module_perms(self,add_label):
         return True
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class UserProfile(models.Model):
