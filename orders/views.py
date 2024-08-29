@@ -10,6 +10,9 @@ from django.views.decorators.csrf import csrf_exempt
 from store.models import Product 
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from decouple import config
+
+from twilio.rest import Client
 
 # Create your views here.
 @csrf_exempt
@@ -58,19 +61,10 @@ def payments(request):
 
     CartItem.objects.filter(user=request.user).delete()
 
-    #send order recieved email to customer
+    # Send order received WhatsApp message to customer
+    send_notification(request.user.phone_number, 'Thank you for your order!')
 
-    mail_subject = 'Thank you for your order!'
-    message = render_to_string('orders/order_recieved_email.html',
-        {
-            'user' : request.user,
-            'order': order,
-        },
-        )
-    to_email = request.user.email
-    sent_email = EmailMessage(mail_subject,message,to=[to_email])
-    sent_email.send() 
-
+    
     # Send order number and transaction id back to sendData method via JsonResponse
 
     data = {
@@ -80,7 +74,19 @@ def payments(request):
     }
     return JsonResponse(data)
 
- 
+
+TWILIO_ACCOUNT_SID = config('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN = config('TWILIO_AUTH_TOKEN')
+TWILIO_WHATSAPP_NUMBER = config('TWILIO_WHATSAPP_NUMBER')
+def send_notification(user_phone, message_body):
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    message = client.messages.create(
+        from_=TWILIO_WHATSAPP_NUMBER,
+        body=message_body,
+        to=f'whatsapp:{user_phone}'
+    )
+    print(user_phone)
+    print(message.sid)
   
 def place_order(request,total=0,quantity=0):
     current_user = request.user
