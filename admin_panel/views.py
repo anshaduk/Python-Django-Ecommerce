@@ -127,7 +127,6 @@ def orders(request):
 def orderdetails(request,id):
     order = Order.objects.get(id=id)
     details = OrderProduct.objects.filter(order=order)
-    print(f"Details: {details}")
     ordered_products = OrderProduct.objects.filter(order_id=order.id)
     subtotal = 0
     for i in ordered_products:
@@ -191,10 +190,6 @@ def blockusers(request,id):
 def userprofile(request,id):
     usr = Account.objects.get(pk=id)
     user =  UserProfile.objects.get(user=usr)
-    print(user)
-    print(user.user.first_name)
-    print(user.user.email)
-    print(user.full_address())
     context = {
         'user' : user,
     }
