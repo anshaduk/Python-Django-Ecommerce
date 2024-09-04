@@ -18,8 +18,6 @@ from twilio.rest import Client
 @csrf_exempt
 def payments(request):
     body = json.loads(request.body)
-    print("hellloo")
-    print(body)
     order = Order.objects.get(
         user = request.user,is_ordered=False,order_number=body['orderID']
     )
@@ -34,7 +32,7 @@ def payments(request):
     order.payment = payment
     order.is_ordered = True
     order.save()
-    print(order)
+   
 
     # move the cart item to the order product table
     cart_items = CartItem.objects.filter(user=request.user)
@@ -49,7 +47,7 @@ def payments(request):
         orderproduct.product_price = item.product.price
         orderproduct.ordered = True  
         orderproduct.save()
-        print(orderproduct)
+        
 
 
         #Reduce the quantity of the sold products
@@ -85,8 +83,6 @@ def send_notification(user_phone, message_body):
         body=message_body,
         to=f'whatsapp:{user_phone}'
     )
-    print(user_phone)
-    print(message.sid)
   
 def place_order(request,total=0,quantity=0):
     current_user = request.user
